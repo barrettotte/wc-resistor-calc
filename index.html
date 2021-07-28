@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Resistor Color Code Calculator</title>
+    <script src="resistor-calc.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+      }
+      .flex-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 0.5rem;
+        background-color: #333;
+        border-bottom: 1px solid #ececec;
+      }
+      header h1 {
+        font-size: 1.25rem;
+      }
+      header a {
+        color: #ececec;
+        text-decoration: none;
+      }
+      header p {
+        font-size: 0.75rem;
+        color: #ccc;
+      }
+      main {
+        margin: 0 5%;
+        height: 100%;
+      }
+      footer p,
+      footer a {
+        font-size: 0.75rem;
+        color: #555;
+      }
+      footer {
+        align-items: center;
+        justify-content: center;
+        margin-top: 2.5rem;
+        background-color: #aaa;
+        border-top: 1px solid black;
+      }
+      footer ul {
+        padding: 1.25rem;
+        text-align: center;
+      }
+      footer ul li {
+        list-style-type: none;
+        display: inline-block;
+        margin: 0.10rem 0.75rem;
+      }
+      footer ul li a {
+        text-decoration: none;
+        color: #4c4c4c;
+        font-weight: bold;
+      }
+      footer ul li a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex-container">
+      <header>
+        <a href="https://github.com/barrettotte/wc-resistor-calc">
+          <h1>Resistor Color Code Calculator</h1>
+        </a>
+        <p>A resistor color code calculator as a vanilla JS web component.</p>
+      </header>
+      <main>
+        <wc-resistor-calc></wc-resistor-calc>
+      </main>
+      <footer>
+        <ul>
+          <li><a href="https://github.com/barrettotte/wc-resistor-calc">GitHub Repo</a></li>
+          <li><a href="https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-resistor-color-code">Digi-Key</a></li>
+          <li><a href="https://github.com/barrettotte/">Barrett Otte - 2021</a></li>
+        </ul>
+      </footer>
+    </div>
+  </body>
+</html>
