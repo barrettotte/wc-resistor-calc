@@ -40,7 +40,7 @@ class ResistorCalc extends HTMLElement {
     this.setAttribute('band', radio.originalTarget.value);
   }
 
-  // construct WC's styling
+  // construct component's styling
   _getStyles() {
     return `
       :host {
@@ -50,28 +50,51 @@ class ResistorCalc extends HTMLElement {
       .calc-container {
         display: flex;
         flex-flow: row wrap;
-        border: 1px solid black;
-      }
-      .input-container,
-      .diagram-container {
-        min-width: 250px;
+        justify-content: center;
+        width: 275px;
         margin: 0.25rem;
-        padding: 0.5rem;
-        border: 1px solid black;
+        padding: 1.25rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
       }
-      .input-container header {
+      .calc-container header {
         font-size: 1.0rem;
         font-weight: bold;
-        padding-bottom: 0.5rem;
+        padding: 0.75rem;
+      }
+      .band-container, 
+      .radio-container {
+        margin: 0.50rem 0;
+        padding: 0.75rem;
+        width: 100%;
       }
       .band-container {
-        margin-top: 1.5rem;
+        border-bottom: 1px solid #ccc;
+      }
+      .radio-container {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        border-top: 1px solid #ccc;
       }
       .band-select {
+        display: flex;
         margin-bottom: 0.50rem;
+      }
+      .band-select label {
+        flex: 1;
       }
       .band-select select {
         margin-left: 0.50rem;
+        width: 50%;
+      }
+      #resistor-calc {
+        text-align: center;
+        padding-top: 0.50rem;
+      }
+      #resistor-calc span {
+        font-weight: bold;
+        margin-left: 0.25rem;
       }
     `;
   }
@@ -169,23 +192,24 @@ class ResistorCalc extends HTMLElement {
     return html;
   }
 
-  // construct WC's HTML
+  // construct component's HTML
   _getInnerHTML() {
     let html = `
       <style>${this._getStyles()}</style>
       <div class="calc-container">
-        <div class="input-container">
-          <div>
-            <header>Resistor Band Count:</header>
+        <header>Resistor Band Calculator</header>
+        <div class="radio-container">
+          <p>Resistor Band Count:</p>
+          <div class="band-radio">
             ${this._getBandRadioGroup()}
           </div>
-          <div class="band-container">
-            ${this._getBandSelects()}
-          </div>
-          <p>Resistor value: 10kΩ 2%</p>
         </div>
-        <div class="diagram-container">
-          <p>Diagram container</p>
+        <div class="band-container">
+          ${this._getBandSelects()}
+        </div>
+        <div id="resistor-calc">
+          <p>TODO: svg</p>
+          <p>Resistor value: <span>10kΩ 2%</span></p>
         </div>
       </div>
     `;
