@@ -3,17 +3,73 @@ class ResistorCalc extends HTMLElement {
   constructor() {
     super();
     this.band = 4;
-    this.showDiagram = true;
-    
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = this._getInnerHTML();
+  }
+
+  // 4-6 band resistor color values
+  static bandColorMap = {
+    standard: {
+      black: 0,
+      brown: 1,
+      red: 2,
+      orange: 3,
+      yellow: 4,
+      green: 5,
+      blue: 6,
+      violet: 7,
+      grey: 8,
+      white: 9
+    },
+    multiplier: {
+      black: 1,
+      brown: 10,
+      red: 100,
+      orange: 1000,
+      yellow: 10000,
+      green: 100000,
+      blue: 1000000,
+      violet: 10000000,
+      grey: 100000000,
+      white: 1000000000,
+      gold: 0.1,
+      silver: 0.01
+    },
+    tolerance: {
+      brown: 1,
+      red: 2,
+      green: 0.5,
+      blue: 0.25,
+      violet: 0.1,
+      grey: 0.05,
+      gold: 5,
+      silver: 10
+    },
+    ppm: {
+      brown: 100,
+      red: 50,
+      orange: 15,
+      yellow: 25,
+      blue: 10,
+      violet: 5
+    }
+  }
+  
+  // attributes to watch
+  static get observedAttributes() {
+    return ['band'];
+  }
+
+  // lifecycle hook when component connects
+  async connectedCallback() {
+    this.shadowRoot.innerHTML = await this._buildInnerHTML();
+    this._updateBand(); // init band radio
 
     this.shadowRoot.querySelectorAll("input[name='band-radio']").forEach((input) => {
-      input.addEventListener('click', this.updateBand.bind(this));
+      input.addEventListener('click', this._updateBand.bind(this));
     });
   }
 
-  // respond to attribute changes
+  // lifecycle hook when a component's watched attribute changes
   attributeChangedCallback(name, oldValue, newValue) {
     console.log(`${name} changed from ${oldValue} to ${newValue}`);
 
@@ -23,85 +79,29 @@ class ResistorCalc extends HTMLElement {
       } else {
         this.band = 4;
       }
-      this.shadowRoot.querySelectorAll("input[name='band-radio']").forEach((input) => {
-        input.checked = input.id === `band-${this.band}`;
-      });
-      this.shadowRoot.innerHTML = this._getInnerHTML();
+      this._updateBand();
     }
   }
 
-  // attributes to watch
-  static get observedAttributes() {
-    return ['band', 'diagram'];
+  // fetch source from file
+  async _fetchSrc(srcPath) {
+    const src = await fetch(srcPath);
+    return await src.text();
   }
 
   // update band attribute
-  updateBand(radio) {
-    this.setAttribute('band', radio.originalTarget.value);
+  _updateBand(radio = null) {
+    if (radio !== null) {
+      this.setAttribute('band', radio.originalTarget.value);
+    }
+    this.shadowRoot.querySelectorAll("input[name='band-radio']").forEach((input) => {
+      input.checked = input.id === `band-${this.band}`;
+    });
   }
 
-  // construct component's styling
-  _getStyles() {
-    return `
-      :host {
-        box-sizing: border-box;
-        font-family: sans-serif;
-      }
-      .calc-container {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        width: 275px;
-        margin: 0.25rem;
-        padding: 1.25rem;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
-      }
-      .calc-container header {
-        font-size: 1.0rem;
-        font-weight: bold;
-        padding: 0.75rem;
-      }
-      .band-container, 
-      .radio-container {
-        margin: 0.50rem 0;
-        padding: 0.75rem;
-        width: 100%;
-      }
-      .band-container {
-        border-bottom: 1px solid #ccc;
-      }
-      .radio-container {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        border-top: 1px solid #ccc;
-      }
-      .band-select {
-        display: flex;
-        margin-bottom: 0.50rem;
-      }
-      .band-select label {
-        flex: 1;
-      }
-      .band-select select {
-        margin-left: 0.50rem;
-        width: 50%;
-      }
-      #resistor-calc {
-        text-align: center;
-        padding-top: 0.50rem;
-      }
-      #resistor-calc span {
-        font-weight: bold;
-        margin-left: 0.25rem;
-      }
-    `;
-  }
-
-  // construct band radio group HTML
-  _getBandRadioGroup() {
-    let radioHtml = '';
+  // dynamically build band radio HTML
+  _getBandRadioHTML() {
+    let radioHtml = '<div class="band-radio">';
     for (let i = 4; i <= 6; i++) {
       radioHtml += `
         <input type="radio" id="band-${i}" name="band-radio" 
@@ -109,10 +109,10 @@ class ResistorCalc extends HTMLElement {
         <label for="band-${i}">${i}</label>
       `;
     }
-    return radioHtml;
+    return radioHtml + '</div>';
   }
 
-  // construct color band options HTML
+  // construct color band options HTML  TODO: dynamically build from colorMap
   _getColorBandOptions() {
     return `
       <option value="0">Select a Color</option>
@@ -129,10 +129,9 @@ class ResistorCalc extends HTMLElement {
     `;
   }
 
-  // construct resistor band select HTML
-  _getBandSelects() {
-    let html = '';
-
+  // construct resistor band container HTML
+  _getBandContainerHTML() {
+    let html = '<div class="band-container">';
     for (let i = 1; i <= 3; i++) {
       html += `
         <div class="band-select">
@@ -143,6 +142,7 @@ class ResistorCalc extends HTMLElement {
         </div>
       `;
     }
+    // TODO: dynamically build from colorMap
     html += `
       <div class="band-select">
         <label for="band-4-select">Multiplier:</label>
@@ -185,35 +185,36 @@ class ResistorCalc extends HTMLElement {
           <option value="3">Orange - 15 ppm</option>
           <option value="4">Yellow - 25 ppm</option>
           <option value="5">Blue - 10 ppm</option>
-          <option value="6">Violet - 10 ppm</option>
+          <option value="6">Violet - 5 ppm</option>
         </select>
       </div>
     `;
-    return html;
+    return html + '</div>';
+  }
+
+  // fetch resistor SVG
+  async _fetchResistorSvg() {
+    const src = await fetch('resistor.svg');
+    return await src.text();
   }
 
   // construct component's HTML
-  _getInnerHTML() {
-    let html = `
-      <style>${this._getStyles()}</style>
+  async _buildInnerHTML() {
+    return `
+      <style>${await this._fetchSrc('resistor-calc.css')}</style>
       <div class="calc-container">
         <header>Resistor Band Calculator</header>
         <div class="radio-container">
           <p>Resistor Band Count:</p>
-          <div class="band-radio">
-            ${this._getBandRadioGroup()}
-          </div>
+          ${this._getBandRadioHTML()}
         </div>
-        <div class="band-container">
-          ${this._getBandSelects()}
-        </div>
+        ${this._getBandContainerHTML()}
         <div id="resistor-calc">
-          <img src="assets/resistor.svg" alt="resistor"/>
+          ${await this._fetchSrc('resistor.svg')}
           <p>Resistor value: <span>10kΩ 2%</span></p>
         </div>
       </div>
     `;
-    return html;
   }
 }
 
