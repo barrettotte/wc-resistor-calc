@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+   Created with Inkscape (http://www.inkscape.org/) 
+   ... then edited a little bit in VS Code (comments and label attributes)
+-->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg10"
+   width="200"
+   height="64"
+   viewBox="0 0 200 64"
+   sodipodi:docname="resistor.svg"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     id="namedview12"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="5.6568543"
+     inkscape:cx="101.60214"
+     inkscape:cy="38.344086"
+     inkscape:window-x="1912"
+     inkscape:window-y="1072"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer4" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="bands"
+     style="display:inline"
+     transform="translate(0,-12)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="outline"
+     style="display:inline"
+     transform="translate(0,-12)">
+    <g
+       id="g102">
+      <g
+         id="g67" />
+      <g
+         id="g67-0"
+         transform="matrix(-1.0876832,0,0,1,350.22851,0.1207735)" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="fill"
+     style="display:inline"
+     transform="translate(0,-12)">
+    <g
+       id="g162"
+       transform="translate(-71.417784,5.8336309)">
+      <!-- start bands -->
+      <rect
+         label="band-1"
+         y="14.702681"
+         x="89.714172"
+         height="46.757439"
+         width="8.8388367"
+         id="rect238"
+         style="display:inline;fill:#CCC" />
+      <rect
+         label="band-2"
+         y="21.46439"
+         x="116.27487"
+         height="34.029514"
+         width="8.7062521"
+         id="rect240"
+         style="display:inline;fill:#CCC" />
+      <rect
+         label="band-3"
+         y="21.552776"
+         x="132.53831"
+         height="34.117908"
+         width="8.6620569"
+         id="rect242"
+         style="display:inline;fill:#CCC" />
+      <rect
+         label="band-4"
+         y="21.508583"
+         x="173.06438"
+         height="34.073708"
+         width="9.3691645"
+         id="rect244"
+         style="display:inline;fill:#CCC" />
+      <rect
+         label="band-5"
+         y="21.46439"
+         x="209.83394"
+         height="34.029514"
+         width="8.9272232"
+         id="rect246"
+         style="display:inline;fill:#CCC" />
+      <rect
+         label="band-6"
+         y="15.188817"
+         x="243.64249"
+         height="46.492271"
+         width="9.0156116"
+         id="rect248"
+         style="display:inline;fill:#CCC" />
+      <!-- end bands -->
+      <path
+         label="resistor-outline"
+         sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccc"
+         inkscape:connector-curvature="0"
+         d="m 78.702014,32.697427 h -6.703549 l -0.09408,14.418511 6.72707,-0.02352 m 0.117601,-20.204733 0.846764,-4.986499 0.940849,-3.669311 1.505359,-3.104801 H 106.5041 l 2.82255,6.397772 121.9891,0.12078 3.07004,-6.397772 h 26.60698 l 1.63736,3.104801 1.02334,3.669311 0.92101,4.986499 v 13.45414 l -9.3e-4,10.150326 -0.92078,4.710494 -1.02309,3.466214 -1.63695,2.932949 h -26.60039 l -3.06928,-6.043654 -122.00313,-0.120774 -2.82185,6.043655 H 82.042064 L 80.53708,58.668866 79.596462,55.202652 78.749908,50.492158 78.749482,39.062266 Z m 186.082544,5.835808 6.35343,0.0499 v 14.43659 l -6.41996,-0.01663"
+         style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="path104" />
+      <rect
+         label="resistor-wire"
+         y="32.697426"
+         x="71.998466"
+         height="14.394991"
+         width="6.6329899"
+         id="rect229"
+         style="display:inline;fill:#676767" />
+      <rect
+         label="resistor-wire"
+         y="32.723492"
+         x="264.8316"
+         height="14.48649"
+         width="6.3534298"
+         id="rect231"
+         style="display:inline;fill:#676767" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path251"
+         d="m 233.79919,59.243744 c -0.53171,-0.996578 -1.22929,-2.34892 -1.55016,-3.005203 l -0.58342,-1.193243 h -6.41441 -6.41441 V 38.607243 22.169189 l 6.46437,-0.04637 6.46437,-0.04637 1.48355,-3.093592 1.48355,-3.093592 4.42645,-0.04723 4.42645,-0.04723 V 38.425257 61.05571 h -4.4098 -4.40979 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path253"
+         d="M 252.77792,38.428289 V 15.800872 l 3.93328,7.99e-4 3.93328,7.99e-4 0.73892,1.457608 c 0.88354,1.742878 1.49973,3.807237 2.09262,7.010654 l 0.43883,2.371065 v 12.132108 c 0,12.067698 -0.002,12.143811 -0.42338,14.336312 -0.57351,2.985801 -1.24342,5.129448 -2.08251,6.663858 l -0.70086,1.281631 h -3.96509 -3.96509 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path255"
+         d="M 182.59757,38.605065 V 22.164833 h 13.61181 13.6118 v 16.440232 16.440233 h -13.6118 -13.61181 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path257"
+         d="M 141.23182,38.605065 V 22.164833 h 15.90991 15.9099 v 16.440232 16.440233 h -15.9099 -15.90991 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path259"
+         d="M 125.14514,38.605065 V 22.164833 h 3.62393 3.62392 v 16.440232 16.440233 h -3.62392 -3.62393 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path261"
+         d="m 98.628641,38.336384 v -22.71932 l 3.747429,0.04771 3.74744,0.04771 1.41588,3.226175 1.41589,3.226175 h 3.58713 3.58712 V 38.60148 55.038125 l -3.62807,0.04778 -3.62808,0.04778 -1.36586,2.954996 -1.36587,2.954997 -3.7565,0.006 -3.756509,0.006 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path263"
+         d="m 81.805184,59.86128 c -0.76201,-1.40095 -1.413735,-3.613989 -2.011176,-6.829274 -0.429254,-2.310143 -0.430671,-2.357061 -0.432346,-14.318914 -0.0016,-11.305829 0.01939,-12.125223 0.362037,-14.142135 0.552703,-3.253383 1.339777,-6.159472 2.065354,-7.625837 l 0.653661,-1.321025 h 3.585157 3.585158 V 38.3399 61.055706 l -3.579728,-0.0012 -3.579728,-0.0012 -0.648389,-1.19206 z"
+         style="fill:#e7e2d6;fill-opacity:1;stroke-width:0.17677669" />
+    </g>
+  </g>
+</svg>

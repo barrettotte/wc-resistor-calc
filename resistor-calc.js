@@ -208,7 +208,7 @@ class ResistorCalc extends HTMLElement {
           ${this._getBandSelects()}
         </div>
         <div id="resistor-calc">
-          <p>TODO: svg</p>
+          <img src="assets/resistor.svg" alt="resistor"/>
           <p>Resistor value: <span>10kΩ 2%</span></p>
         </div>
       </div>

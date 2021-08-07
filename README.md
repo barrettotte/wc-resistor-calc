@@ -23,3 +23,4 @@ TODO: link to deployed page
 ## References
 
 - [Digi-Key Resistor Color Code Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-resistor-color-code)
+- [Inkscape - for SVG editing](https://inkscape.org/)
