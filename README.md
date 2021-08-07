@@ -12,13 +12,12 @@ color code calculator from
 TODO: link to deployed page
 
 ```html
-<wc-resistor-calc default-band="4" hide-diagram></wc-resistor-calc>
+<wc-resistor-calc band="4"></wc-resistor-calc>
 ```
 
 ### Attributes
 
-- `default-band` - Default resistor type (`4`,`5`, or `6`); Defaults to `4` if not specified.
-- `hide-diagram` - Control if resistor diagram should be shown; Defaults to shown if not specified.
+- `band` - Default resistor type (`4`,`5`, or `6`); Defaults to `4` if not specified.
 
 ## References
 
