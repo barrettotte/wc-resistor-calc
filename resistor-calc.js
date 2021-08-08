@@ -324,7 +324,7 @@ class ResistorCalc extends HTMLElement {
             <rect id="svg-band-3" class="svg-band" y="22" x="131" height="33.5" width="11"/>
             <rect id="svg-band-4" class="svg-band" y="22" x="173" height="33.5" width="11"/>
             <rect id="svg-band-5" class="svg-band" y="15" x="243" height="46.5" width="11"/>
-            <rect id="svg-band-6" class="svg-band" y="22" x="208" height="33.5" width="11"/>
+            <rect id="svg-band-6" class="svg-band" y="22" x="208" height="33.5" width="11.25"/>
             <path id="resistor-outline" d="m 78.702014,32.697427 h -6.703549 l -0.09408,14.418511 6.72707,-0.02352 m 0.117601,-20.204733 0.846764,-4.986499 0.940849,-3.669311 1.505359,-3.104801 H 106.5041 l 2.82255,6.397772 121.9891,0.12078 3.07004,-6.397772 h 26.60698 l 1.63736,3.104801 1.02334,3.669311 0.92101,4.986499 v 13.45414 l -9.3e-4,10.150326 -0.92078,4.710494 -1.02309,3.466214 -1.63695,2.932949 h -26.60039 l -3.06928,-6.043654 -122.00313,-0.120774 -2.82185,6.043655 H 82.042064 L 80.53708,58.668866 79.596462,55.202652 78.749908,50.492158 78.749482,39.062266 Z m 186.082544,5.835808 6.35343,0.0499 v 14.43659 l -6.41996,-0.01663" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
             <rect id="wire-left" y="32.697426" x="71.998466" height="14.394991" width="6.6329899" style="display:inline;fill:#676767"/>
             <rect id="wire-right" y="32.723492" x="264.8316" height="14.48649" width="6.3534298" style="display:inline;fill:#676767"/>
