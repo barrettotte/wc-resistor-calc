@@ -3,55 +3,29 @@ class ResistorCalc extends HTMLElement {
   constructor() {
     super();
     this.band = 4;
-    this.attachShadow({mode: 'open'});
-  }
+    this.bandValues = [0, 0, 0, 0, 0, 0];
+    this._bandColorDict = {};
 
-  // 4-6 band resistor color values
-  static bandColorMap = {
-    standard: {
-      black: 0,
-      brown: 1,
-      red: 2,
-      orange: 3,
-      yellow: 4,
-      green: 5,
-      blue: 6,
-      violet: 7,
-      grey: 8,
-      white: 9
-    },
-    multiplier: {
-      black: 1,
-      brown: 10,
-      red: 100,
-      orange: 1000,
-      yellow: 10000,
-      green: 100000,
-      blue: 1000000,
-      violet: 10000000,
-      grey: 100000000,
-      white: 1000000000,
-      gold: 0.1,
-      silver: 0.01
-    },
-    tolerance: {
-      brown: 1,
-      red: 2,
-      green: 0.5,
-      blue: 0.25,
-      violet: 0.1,
-      grey: 0.05,
-      gold: 5,
-      silver: 10
-    },
-    ppm: {
-      brown: 100,
-      red: 50,
-      orange: 15,
-      yellow: 25,
-      blue: 10,
-      violet: 5
-    }
+    this._bandColorDict['standard'] = [
+      ['black', 0], ['brown', 1], ['red', 2], ['orange', 3], ['yellow', 4], 
+      ['green', 5], ['blue', 6], ['violet', 7], ['grey', 8], ['white', 9]
+    ];
+    this._bandColorDict['multiplier'] = [
+      ['black', 1], ['brown', 10], ['red', 100], ['orange', 1000], ['yellow', 10000], 
+      ['green', 100000], ['blue', 1000000], ['violet', 10000000], ['grey', 100000000], 
+      ['white', 1000000000], ['gold', 0.1], ['silver', 0.01]
+    ];
+    this._bandColorDict['tolerance'] = [
+      ['brown', 1], ['red', 2], ['green', 0.5], ['blue', 0.25], 
+      ['violet', 0.1], ['grey', 0.05], ['gold', 5], ['silver', 10]
+    ];
+    this._bandColorDict['ppm'] = [
+      ['brown', 100], ['red', 50], ['orange', 15], ['yellow', 25], 
+      ['blue', 10], ['violet', 5]
+    ];
+
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = this._getInnerHTML();
   }
   
   // attributes to watch
@@ -60,43 +34,117 @@ class ResistorCalc extends HTMLElement {
   }
 
   // lifecycle hook when component connects
-  async connectedCallback() {
-    this.shadowRoot.innerHTML = await this._getInnerHTML();
-    this._updateBand(); // init band radio
+  connectedCallback() {
+    this._updateBandCount();
+    this._updateCalculation();
 
-    this.shadowRoot.querySelectorAll("input[name='band-radio']").forEach((input) => {
-      input.addEventListener('click', this._updateBand.bind(this));
+    this.shadowRoot.querySelectorAll('input[name="band-radio"]').forEach((input) => {
+      input.addEventListener('click', this._updateBandCount.bind(this));
+    });
+    this.shadowRoot.querySelectorAll('select').forEach((select, i) => {
+      select.addEventListener('change', this._updateBand.bind(this, select));
     });
   }
 
   // lifecycle hook when a component's watched attribute changes
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log(`${name} changed from ${oldValue} to ${newValue}`);
-
+    // console.log(`${name} changed from ${oldValue} to ${newValue}`);
     if (name === 'band') {
       if (this.hasAttribute('band')) {
         this.band = parseInt(this.getAttribute('band'));
       } else {
         this.band = 4;
       }
-      this._updateBand();
+      this._updateBandCount();
     }
   }
 
-  // fetch source from file
-  async _fetchSrc(srcPath) {
-    const src = await fetch(srcPath);
-    return await src.text();
+  // update band by index
+  _updateBandByIdx(bandIdx) {
+    this._updateBand(this.shadowRoot.querySelector(`select[name="band-${bandIdx}-select"]`));
   }
 
-  // update band attribute
-  _updateBand(radio = null) {
+  // update band color based on selected value
+  _updateBand(bandSelect) {
+    let idx = parseInt(bandSelect.name.split('-')[1]);  // band-idx-select
+    const v = parseInt(bandSelect.value);
+    let color = 'default';
+
+    if (v !== 0) {
+      let src = 'standard';
+      
+      switch(idx) {
+        case 4:  src = 'multiplier';  break;
+        case 5:  src = 'tolerance';   break;
+        case 6:  src = 'ppm';         break;
+      }
+      const d = this._bandColorDict[src][v-1];
+      color = d[0];
+      this.bandValues[idx-1] = d[1];
+    } else {
+      this.bandValues[idx-1] = 0;
+    }
+
+    // 6 banded resistor swaps tolerance and ppm
+    if (this.band === 6) {
+      if (idx == 5) {
+        idx = 6;
+      } else if(idx == 6) {
+        idx = 5;
+      }
+    }
+    this.shadowRoot.getElementById(`svg-band-${idx}`).style.fill = `var(--band-${color})`;
+    this._updateCalculation();
+  }
+
+  // show or hide a specific band
+  _showHideBand(idx, show) {
+    if (!show) {
+      this.shadowRoot.getElementById(`band-${idx}-parent`).style.display = 'none';
+      this.shadowRoot.getElementById(`svg-band-${idx}`).style.fill = 'var(--band-hide)';
+      this.shadowRoot.querySelector(`select[name="band-${idx}-select"]`).selectedIndex = 0;
+      this.bandValues[idx-1] = 0;
+    } else {
+      this.shadowRoot.getElementById(`band-${idx}-parent`).style.display = 'flex';
+      
+      const fill = this.shadowRoot.getElementById(`svg-band-${idx}`).style.fill;
+      if (fill === 'var(--band-hide)') {
+        this.shadowRoot.getElementById(`svg-band-${idx}`).style.fill = 'var(--band-default)';
+      }
+    }
+    this._updateCalculation();
+  }
+
+  // update band count attribute
+  _updateBandCount(radio = null) {
     if (radio !== null) {
       this.setAttribute('band', radio.originalTarget.value);
     }
-    this.shadowRoot.querySelectorAll("input[name='band-radio']").forEach((input) => {
+    this.shadowRoot.querySelectorAll('input[name="band-radio"]').forEach((input) => {
       input.checked = input.id === `band-${this.band}`;
     });
+
+    // show/hide band selects
+    switch(this.band) {
+      case 4:
+        this._showHideBand(3, false);
+        this._showHideBand(6, false);
+        this._updateBandByIdx(5);  // ppm and tolerance swap fix
+        this._updateBandByIdx(6);
+        break;
+      case 5:
+        this._showHideBand(3, true);
+        this._showHideBand(6, false);
+        this._updateBandByIdx(5);  // ppm and tolerance swap fix
+        this._updateBandByIdx(6);
+        break;
+      case 6:
+        this._showHideBand(3, true);
+        this._showHideBand(6, true);
+        this._updateBandByIdx(5);  // ppm and tolerance swap fix
+        this._updateBandByIdx(6);
+        break;
+    }
   }
 
   // dynamically build band radio HTML
@@ -112,83 +160,77 @@ class ResistorCalc extends HTMLElement {
     return radioHtml + '</div>';
   }
 
-  // construct color band options HTML  TODO: dynamically build from colorMap
-  _getColorBandOptions() {
-    return `
-      <option value="0">Select a Color</option>
-      <option value="1">Black - 0</option>
-      <option value="2">Brown - 1</option>
-      <option value="3">Red - 2</option>
-      <option value="4">Orange - 3</option>
-      <option value="5">Yellow - 4</option>
-      <option value="6">Green - 5</option>
-      <option value="7">Blue - 6</option>
-      <option value="8">Violet - 7</option>
-      <option value="9">Grey - 8</option>
-      <option value="10">White - 9</option>
-    `;
+  // format ohm value as abbreviated number
+  _formatOhms(ohms) {
+    if (ohms < 1) {
+      return ohms + 'Ω';
+    }
+    const sizes = ['', 'k', 'M', 'G'];
+    const i = Math.floor(Math.log(ohms) / Math.log(1000));
+    return parseFloat((ohms / Math.pow(1000, i)).toFixed(2)) + '' + sizes[i] + 'Ω';
+  }
+
+  // construct color band options HTML
+  _getStandardColorOptions() {
+    const standardOpts = this._bandColorDict['standard'];
+    let html = '<option value="0">Select a Color</option>';
+    for (let i = 0; i < standardOpts.length; i++) {
+      html += `<option value=${i+1}>${standardOpts[i][0]} - ${standardOpts[i][1]}`;
+    }
+    return html;
   }
 
   // construct resistor band container HTML
   _getBandContainerHTML() {
+    const ppmOpts = this._bandColorDict['ppm'];
+    const multOpts = this._bandColorDict['multiplier'];
+    const tolOpts = this._bandColorDict['tolerance'];
+
     let html = '<div class="band-container">';
     for (let i = 1; i <= 3; i++) {
       html += `
-        <div class="band-select">
+        <div class="band-select" id="band-${i}-parent">
           <label for="band-${i}-select">Band ${i}:</label>
-          <select name="band-${i}-select" id="band-${i}-select">
-            ${this._getColorBandOptions()}
+          <select name="band-${i}-select">
+            ${this._getStandardColorOptions()}
           </select>
         </div>
       `;
     }
-    // TODO: dynamically build from colorMap
     html += `
-      <div class="band-select">
+      <div class="band-select" id="band-4-parent">
         <label for="band-4-select">Multiplier:</label>
-        <select name="band-4-select" id="band-4-select">
+        <select name="band-4-select">
           <option value="0">Select a Color</option>
-          <option value="1">Black - 1Ω</option>
-          <option value="2">Brown - 10Ω</option>
-          <option value="3">Red - 100Ω</option>
-          <option value="4">Orange - 1kΩ</option>
-          <option value="5">Yellow - 10kΩ</option>
-          <option value="6">Green - 100kΩ</option>
-          <option value="7">Blue - 1MΩ</option>
-          <option value="8">Violet - 10MΩ</option>
-          <option value="9">Grey - 100MΩ</option>
-          <option value="10">White - 1GΩ</option>
-          <option value="11">Gold - 0.1Ω</option>
-          <option value="12">Silver - 0.01Ω</option>
-        </select>
-      </div>
-      <div class="band-select">
-        <label for="band-5-select">Tolerance:</label>
-        <select name="band-5-select" id="band-5-select">
-          <option value="0">Select a Color</option>
-          <option value="1">Brown - 1%</option>
-          <option value="2">Red - 2%</option>
-          <option value="3">Green - 0.5%</option>
-          <option value="4">Blue - 0.25%</option>
-          <option value="5">Violet - 0.1%</option>
-          <option value="6">Grey - 0.05%</option>
-          <option value="7">Gold - 5%</option>
-          <option value="8">Silver - 10%</option>
-        </select>
-      </div>
-      <div class="band-select">
-        <label for="band-6-select">PPM:</label>
-        <select name="band-6-select" id="band-6-select">
-          <option value="0">Select a Color</option>
-          <option value="1">Brown - 100 ppm</option>
-          <option value="2">Red - 50 ppm</option>
-          <option value="3">Orange - 15 ppm</option>
-          <option value="4">Yellow - 25 ppm</option>
-          <option value="5">Blue - 10 ppm</option>
-          <option value="6">Violet - 5 ppm</option>
-        </select>
-      </div>
     `;
+    for (let i = 0; i < multOpts.length; i++) {
+      html += `<option value=${i+1}>${multOpts[i][0]} - x${this._formatOhms(multOpts[i][1])}`;
+    }
+    html += `
+        </select>
+      </div>
+      <div class="band-select" id="band-5-parent">
+        <label for="band-5-select">Tolerance:</label>
+        <select name="band-5-select">
+          <option value="0">Select a Color</option>
+    `;
+    for (let i = 0; i < tolOpts.length; i++) {
+      html += `<option value=${i+1}>${tolOpts[i][0]} - ${tolOpts[i][1]}%`;
+    }
+    html += `
+        </select>
+      </div>
+      <div class="band-select" id="band-6-parent">
+        <label for="band-6-select">PPM:</label>
+        <select name="band-6-select">
+          <option value="0">Select a Color</option>
+    `;
+    for (let i = 0; i < ppmOpts.length; i++) {
+      html += `<option value=${i+1}>${ppmOpts[i][0]} - ${ppmOpts[i][1]}ppm`;
+    }
+    html += `
+        </select>
+      </div>`;
     return html + '</div>';
   }
 
@@ -213,7 +255,7 @@ class ResistorCalc extends HTMLElement {
         --band-gold: #C08327;
         --band-silver: #BFBEBF;
         --band-default: #CCC;
-        --band-unassigned: #e7e2d6;
+        --band-hide: #e7e2d6;
       }
       .calc-container {
           display: flex;
@@ -256,20 +298,17 @@ class ResistorCalc extends HTMLElement {
           margin-left: 0.50rem;
           width: 50%;
       }
-      #resistor-calc {
-          text-align: center;
+      svg {
           padding-top: 0.50rem;
       }
-      #resistor-calc span {
+      .resistance-container {
+          text-align: center;
           font-weight: bold;
           margin-left: 0.25rem;
       }
       .svg-band {
           display:inline;
           fill:#CCC;
-      }
-      #svg-band-1 {
-          fill: var(--band-violet);
       }
     `;
   }
@@ -280,12 +319,12 @@ class ResistorCalc extends HTMLElement {
       <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg10" width="256" height="64" viewBox="0 0 200 64">
         <g id="layer4" style="display:inline" transform="translate(0,-12)">
           <g id="g162" transform="translate(-71.417784,5.8336309)">
-            <rect id="svg-band-1" class="svg-band" y="14.702681" x="89.714172" height="46.757439" width="8.8388367"/>
-            <rect id="svg-band-2" class="svg-band" y="21.46439" x="116.27487" height="34.029514" width="8.7062521"/>
-            <rect id="svg-band-3" class="svg-band" y="21.552776" x="132.53831" height="34.117908" width="8.6620569"/>
-            <rect id="svg-band-4" class="svg-band" y="21.508583" x="173.06438" height="34.073708" width="9.3691645"/>
-            <rect id="svg-band-5" class="svg-band" y="21.46439" x="209.83394" height="34.029514" width="8.9272232"/>
-            <rect id="svg-band-6" class="svg-band" y="15.188817" x="243.64249" height="46.492271" width="9.0156116"/>
+            <rect id="svg-band-1" class="svg-band" y="15" x="89" height="46.5" width="11"/>
+            <rect id="svg-band-2" class="svg-band" y="22" x="115" height="33.5" width="11"/>
+            <rect id="svg-band-3" class="svg-band" y="22" x="131" height="33.5" width="11"/>
+            <rect id="svg-band-4" class="svg-band" y="22" x="173" height="33.5" width="11"/>
+            <rect id="svg-band-5" class="svg-band" y="15" x="243" height="46.5" width="11"/>
+            <rect id="svg-band-6" class="svg-band" y="22" x="208" height="33.5" width="11"/>
             <path id="resistor-outline" d="m 78.702014,32.697427 h -6.703549 l -0.09408,14.418511 6.72707,-0.02352 m 0.117601,-20.204733 0.846764,-4.986499 0.940849,-3.669311 1.505359,-3.104801 H 106.5041 l 2.82255,6.397772 121.9891,0.12078 3.07004,-6.397772 h 26.60698 l 1.63736,3.104801 1.02334,3.669311 0.92101,4.986499 v 13.45414 l -9.3e-4,10.150326 -0.92078,4.710494 -1.02309,3.466214 -1.63695,2.932949 h -26.60039 l -3.06928,-6.043654 -122.00313,-0.120774 -2.82185,6.043655 H 82.042064 L 80.53708,58.668866 79.596462,55.202652 78.749908,50.492158 78.749482,39.062266 Z m 186.082544,5.835808 6.35343,0.0499 v 14.43659 l -6.41996,-0.01663" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
             <rect id="wire-left" y="32.697426" x="71.998466" height="14.394991" width="6.6329899" style="display:inline;fill:#676767"/>
             <rect id="wire-right" y="32.723492" x="264.8316" height="14.48649" width="6.3534298" style="display:inline;fill:#676767"/>
@@ -302,20 +341,38 @@ class ResistorCalc extends HTMLElement {
     `;
   }
 
+  // calculate resistance from band values
+  _updateCalculation() {
+    let base = parseInt(`${this.bandValues[0]}${this.bandValues[1]}`);
+    if (this.band >= 5) {
+      base = parseInt(`${base}${this.bandValues[2]}`);
+    }
+    const ohms = this._formatOhms(base * this.bandValues[3]);
+    let display = `${ohms} ${this.bandValues[4]}%`;
+
+    if (this.band === 6) {
+      display += ` ${this.bandValues[5]}ppm`;
+    }
+    this.shadowRoot.getElementById('resistor-calc').textContent=display;
+
+    return display;
+  }
+
   // construct component's HTML
   _getInnerHTML() {
     return `
       <style>${this._getStyles()}</style>
       <div class="calc-container">
-        <header>Resistor Band Calculator</header>
+        <header>Resistor Color Code Calculator</header>
         <div class="radio-container">
           <p>Resistor Band Count:</p>
           ${this._getBandRadioHTML()}
         </div>
         ${this._getBandContainerHTML()}
-        <div id="resistor-calc">
+        <div class="resistance-container">
           ${this._getResistorSvg()}
-          <p>Resistor value: <span>10kΩ 2% (TODO)</span></p>
+          <p>Resistor value:</p>
+          <p id="resistor-calc"></p>
         </div>
       </div>
     `;
