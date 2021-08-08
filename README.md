@@ -12,11 +12,13 @@ color code calculator from [Digi-Key](https://www.digikey.com/en/resources/conve
 <wc-resistor-calc band="4"></wc-resistor-calc>
 ```
 
-Also deployed to [TODO:](#), [index.html](index.html)` instantiates this web component.
+Also deployed to [https://barrettotte.github.io/wc-resistor-calc/](https://barrettotte.github.io/wc-resistor-calc/), [index.html](index.html)` instantiates this web component.
 
 ### Attributes
 
 - `band` - Default resistor type (`4`,`5`, or `6`); Defaults to `4` if not specified.
+
+### Screenshot
 
 ![docs/screenshot.PNG](docs/screenshot.PNG)
 
