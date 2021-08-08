@@ -12,7 +12,7 @@ color code calculator from [Digi-Key](https://www.digikey.com/en/resources/conve
 <wc-resistor-calc band="4"></wc-resistor-calc>
 ```
 
-Also deployed to [https://barrettotte.github.io/wc-resistor-calc/](https://barrettotte.github.io/wc-resistor-calc/), [index.html](index.html)` instantiates this web component.
+Also deployed to [https://barrettotte.github.io/wc-resistor-calc/](https://barrettotte.github.io/wc-resistor-calc/), [index.html](index.html) instantiates this web component.
 
 ### Attributes
 
