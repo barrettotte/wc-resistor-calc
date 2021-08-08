@@ -127,22 +127,22 @@ class ResistorCalc extends HTMLElement {
     // show/hide band selects
     switch(this.band) {
       case 4:
+        this._updateBandByIdx(5);  // ppm and tolerance swap fix
+        this._updateBandByIdx(6);  
         this._showHideBand(3, false);
         this._showHideBand(6, false);
-        this._updateBandByIdx(5);  // ppm and tolerance swap fix
-        this._updateBandByIdx(6);
         break;
       case 5:
+        this._updateBandByIdx(5);  // ppm and tolerance swap fix
+        this._updateBandByIdx(6);
         this._showHideBand(3, true);
         this._showHideBand(6, false);
-        this._updateBandByIdx(5);  // ppm and tolerance swap fix
-        this._updateBandByIdx(6);
         break;
       case 6:
-        this._showHideBand(3, true);
-        this._showHideBand(6, true);
         this._updateBandByIdx(5);  // ppm and tolerance swap fix
         this._updateBandByIdx(6);
+        this._showHideBand(3, true);
+        this._showHideBand(6, true);
         break;
     }
   }
