@@ -118,7 +118,7 @@ class ResistorCalc extends HTMLElement {
   // update band count attribute
   _updateBandCount(radio = null) {
     if (radio !== null) {
-      this.setAttribute('band', radio.originalTarget.value);
+      this.setAttribute('band', radio.target.id.split('-')[1]);
     }
     this.shadowRoot.querySelectorAll('input[name="band-radio"]').forEach((input) => {
       input.checked = input.id === `band-${this.band}`;
